@@ -81,9 +81,11 @@ export default {
           request({
             url:'/register',
             method:'post',
-            data:{
-              a:1
-            }
+            data:this.ruleForm2
+          }).then(()=>{
+
+          }).catch(err=>{
+            console.log(err)
           })
         }else{
           return Error
