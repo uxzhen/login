@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import request from  '@/utils/request'
 export default {
   name: "Register",
   data() {
@@ -77,7 +78,13 @@ export default {
       // console.log(this.ruleForm2)
       this.$refs.ruleForm2.validate((valid)=>{
         if(valid){
-
+          request({
+            url:'/register',
+            method:'post',
+            data:{
+              a:1
+            }
+          })
         }else{
           return Error
         }
