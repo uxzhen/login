@@ -6,7 +6,6 @@
   :default-active="activeIndex"
   class="el-menu-demo"
   mode="horizontal"
-  @select="handleSelect"
   background-color="#545c64"
   text-color="#fff"
   active-text-color="#ffd04b">
@@ -39,47 +38,18 @@
 export default {
   name: "Register",
   data() {
-
-    // var checkAge = (rule, value, callback) => {
-    //   if (!value) {
-    //     return callback(new Error("用户名不能为空"));
-    //   }
-    //   setTimeout(() => {
-    //     if (!string.isInteger(value)) {
-    //       callback(new Error("请输入数字值"));
-    //     } else {
-    //       if (value < 18) {
-    //         callback(new Error("必须年满18岁"));
-    //       } else {
-    //         callback();
-    //       }
-    //     }
-    //   }, 1000);
-    // };
-    // var validatePass = (rule, value, callback) => {
-    //   if (value === "") {
-    //     callback(new Error("请输入密码"));
-    //   } else {
-    //     if (this.ruleForm2.checkPass !== "") {
-    //       this.$refs.ruleForm2.validateField("checkPass");
-    //     }
-    //     callback();
-    //   }
-    // };
-    // var validatePass2 = (rule, value, callback) => {
-    //   if (value === "") {
-    //     callback(new Error("请再次输入密码"));
-    //   } else if (value !== this.ruleForm2.pass) {
-    //     callback(new Error("两次输入密码不一致!"));
-    //   } else {
-    //     callback();
-    //   }
-    // };\
     let checkPass1 = function(rule,value,callback){
       // 密码必须是数字和字母的组合 密码的字符不能是空格 不能是中文 而且长度必须在6-16位之间
       let reg = /(?!^[0-9]+$)(?!^[A-z]+$)(?!^[^A-z0-9]+$)^[^\s\u4e00-\u9fa5]{6,16}$/;
       if(!reg === value){
-        callback(new error('密码必须是数字和字母数字组合'))
+        callback(new Error('密码必须是数字和字母数字组合'))
+      }else{
+        callback()
+      }
+    }
+    let checkPass2 = (rule,value,callback)=>{
+      if(value !== this.ruleForm2.password){
+        callback(new Error('两次密码不一样'))
       }else{
         callback()
       }
@@ -93,35 +63,30 @@ export default {
         username: ""
       },
       rules2:{
-          username:[{required:true,message:'请输入用户名',trigger:'blur'},
-          {min:6,mix:13,message:'请输入正确用户名,6-13位字母数字下划线,必须字母开头',trigger:'blur'}],
-          password:[{required:true,message:'请输入密码',trigger:'blur'},
-          {validate:checkPass1,trigger:'blur'}
-          ]
+          username:[{required:true,message:'请输入用户名',trigger:'blur'},{min:6,mix:13,message:'请输入正确用户名,6-13位字母数字下划线,必须字母开头',trigger:'blur'}],
+          password:[{required:true,message:'请输入密码',trigger:'blur'},{validator:checkPass1,trigger:'blur'},
+          ],
+          checkPass:[{required:true,message:"请确认密码",trigger:'blur'},{validator:checkPass2,trigger:'blur'}]
+
       }
-      // rules2: {
-      //   pass: [{ validator: validatePass, trigger: "blur" }],
-      //   checkPass: [{ validator: validatePass2, trigger: "blur" }],
-      //   age: [{ validator: checkAge, trigger: "blur" }]
-      // }
     };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
+    //提交
+    submitForm(ruleForm2){
+      // console.log(this.ruleForm2)
+      this.$refs.ruleForm2.validate((valid)=>{
+        if(valid){
+
+        }else{
+          return Error
         }
-      });
+      })
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
+    //重置表单
+    resetForm(ruleForm2){
+      this.$refs[ruleForm2].resetFields()
+      //this.$refs.ruleform2.resetFields()
     }
   }
 };
