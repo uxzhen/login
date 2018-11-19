@@ -31,6 +31,11 @@ class Uesrcontorller {
             }
             console.log(doc)
             await Usermodel.addUserName(doc)
+            ctx.body = {
+                status:200,
+                message:"注册成功，请登录！！",
+                success:true
+            }
         }
     }
 }   

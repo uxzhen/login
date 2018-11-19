@@ -82,10 +82,19 @@ export default {
             url:'/register',
             method:'post',
             data:this.ruleForm2
-          }).then(()=>{
-
+          }).then(({data})=>{
+            let success = data.success
+            console.log(data)
+            if(success){
+              this.$router.push('/login')
+              this.$message.success({message:data.message})
+            }else{
+              // success = data.success
+              this.$message({message:data.message})
+            }
           }).catch(err=>{
             console.log(err)
+            
           })
         }else{
           return Error
