@@ -31,77 +31,42 @@
 </template>
 
 <script>
+import request from '@/utils/request'
 export default {
   name: "Login",
   data() {
-    // var checkAge = (rule, value, callback) => {
-    //   if (!value) {
-    //     return callback(new Error("用户名不能为空"));
-    //   }
-    //   setTimeout(() => {
-    //     if (!Number.isInteger(value)) {
-    //       callback(new Error("请输入数字值"));
-    //     } else {
-    //       if (value < 18) {
-    //         callback(new Error("必须年满18岁"));
-    //       } else {
-    //         callback();
-    //       }
-    //     }
-    //   }, 1000);
-    // };
-    // var validatePass = (rule, value, callback) => {
-    //   if (value === "") {
-    //     callback(new Error("请输入密码"));
-    //   } else {
-    //     if (this.ruleForm2.checkPass !== "") {
-    //       this.$refs.ruleForm2.validateField("checkPass");
-    //     }
-    //     callback();
-    //   }
-    // };
-    // var validatePass2 = (rule, value, callback) => {
-    //   if (value === "") {
-    //     callback(new Error("请再次输入密码"));
-    //   } else if (value !== this.ruleForm2.pass) {
-    //     callback(new Error("两次输入密码不一致!"));
-    //   } else {
-    //     callback();
-    //   }
-    // };
     return {
       activeIndex: "/login",
       ruleForm2: {
         password: "",
-        checkPass: "",
         username: ""
       },
       rules2:{
-
+        username:[{required:true,message:'请输入用户名',trigger:'blur'},{min:6,mix:13,message:'请输入正确用户名,6-13位字母数字下划线,必须字母开头',trigger:'blur'}],
+      password:[{required:true,message:'请输入密码',trigger:'blur'}]
       }
-    //   rules2: {
-    //     pass: [{ validator: validatePass, trigger: "blur" }],
-    //     checkPass: [{ validator: validatePass2, trigger: "blur" }],
-    //     age: [{ validator: checkAge, trigger: "blur" }]
-    //   }
     };
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          request({
+            url:'/login',
+            method:'post',
+            data:this.ruleForm2
+          }).then(res=>{
+            console.log('登录请求发送成功')
+          }).catch(err=>{
+            console.log(err)
+          })
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-    },
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
     }
   }
 };

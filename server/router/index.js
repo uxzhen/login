@@ -8,4 +8,6 @@ router.prefix(`${base_API}`)
 
 //注册
 router.post('/register',userContorller.register)
+//登录
+router.post('/login',userContorller.login)
 export default router 

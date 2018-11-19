@@ -29,12 +29,37 @@ class Uesrcontorller {
                 create_time,
                 token   
             }
-            console.log(doc)
             await Usermodel.addUserName(doc)
             ctx.body = {
                 status:200,
                 message:"注册成功，请登录！！",
                 success:true
+            }
+        }
+    }
+    async login(ctx){
+        let { username,password } = ctx.request.body
+        console.log(username,password)
+        let sqlUesrName = await UserName.getUserByName(username)
+        if(sqlUesrName.length !== 0){
+            if(sqlUesrName.password === md5(password)){
+                let token = createTokne(username)
+                sqlUesrName.token = token
+                ctx.body = {
+                    token:sqlUesrName.token ,
+                    message:'登录成功',
+                    status:200
+                }
+            }else{
+                ctx.body = {
+                    message:"用户名或者密码错误",
+                    status:200
+                }
+            }
+        }else{
+            ctx.body = {
+                message:'用户名或者密码错误',
+                status:200
             }
         }
     }
