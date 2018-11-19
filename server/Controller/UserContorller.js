@@ -1,5 +1,9 @@
 import UserName from '../model/Usermodel'
 import md5 from 'md5'
+import moment from 'moment'
+import createTokne from '../utils/createToken'
+import Usermodel from '../model/Usermodel';
+import { log } from 'util';
 class Uesrcontorller {
     async register(ctx){
         let { username,password } = ctx.request.body
@@ -8,9 +12,25 @@ class Uesrcontorller {
         let sqlusername = await UserName.getUserByName(username)
         //数据库返回的是一个查询到的数组
         if(sqlusername.length !== 0){
-            console.log(password)
+            ctx.body = {
+                success:false,
+                message:'用户名已存在，请重新输入！'
+            }
         }else{
-            console.log(sqlusername)
+            //不存在直接存入
+            
+            password = md5(password)
+            let date = new Date()
+            let token = createTokne(sqlusername.id + 1)
+            let create_time = moment(date).format('YYYY-MM-DD HH:mm:ss')
+            let doc = {
+                username,
+                password,
+                create_time,
+                token   
+            }
+            console.log(doc)
+            await Usermodel.addUserName(doc)
         }
     }
 }   
